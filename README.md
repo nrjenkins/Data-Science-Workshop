@@ -8,6 +8,6 @@ In this workshop, we will learn the following:
 
 2. Calculate descriptive statistics and visualize your data in Stata and R
 
-3. Analyse data with basic modeling techniques in Stata and R
+3. Analyze data with basic modeling techniques in Stata and R
 
 4. Visualize the results of your model and generate predictions
