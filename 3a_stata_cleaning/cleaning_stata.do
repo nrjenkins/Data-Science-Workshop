@@ -70,7 +70,7 @@ label variable party "Political Party"
 // 3. Fix the missing value of "-6" in XMP098.
 
 
-// 4. Give all the remaining variables information descriptions. 
+// 4. Give all the remaining variables informative labels. 
 
 
 // 5. What is the average birth year?
