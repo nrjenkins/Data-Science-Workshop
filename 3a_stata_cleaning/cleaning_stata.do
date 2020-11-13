@@ -61,7 +61,7 @@ label variable name "Legislator Name"
 label variable party "Political Party"
 
 // Homework Problems //
-// 1. Give XMP098 and M094 more informative variable names.
+// 1. Give XMP098 and M0974 more informative variable names.
 
 
 // 2. Give the values "1" as male and "2" as female of XMP098 informative labels.
