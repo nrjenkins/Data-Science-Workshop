@@ -40,6 +40,8 @@ R is just a really fancy calculator. Let's start by doing some basic calculation
 # harder to read without spaces (it gets worse when we have complex code).
 1+1 # bad
 5+2 # bad
+
+library(readxl)
 read_excel(path="excel_lab.xlsx",sheet="cd_data") # bad
 
 read_excel(path = "excel_lab.xlsx", sheet = "cd_data") # good

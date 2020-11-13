@@ -58,13 +58,13 @@ browse
 // descriptions of what each variable is. Let's create two for 'name' and 
 // 'party'.
 label variable name "Legislator Name"
-label variable party "State"
+label variable party "Political Party"
 
 // Homework Problems //
 // 1. Give XMP098 and M094 more informative variable names.
 
 
-// 2. Give the values "1" and "2" of XMP098 informative labels.
+// 2. Give the values "1" as male and "2" as female of XMP098 informative labels.
 
 
 // 3. Fix the missing value of "-6" in XMP098.
