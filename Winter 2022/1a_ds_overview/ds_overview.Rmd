@@ -138,9 +138,9 @@ Let's say you need to write a 20 page report. How will you write it?
 
 IDEs offer better tools to help you write code!
 
--   `r fontawesome::fa("r-project", fill = "black")` &rarr; RStudio
--   `r fontawesome::fa("python", fill = "black")` &rarr; PyCharm, Jupyter, RStudio
--   SQL &rarr; MySQL Workbench, Oracle SQL Developer, RStudio
+-   `r fontawesome::fa("r-project", fill = "black")` → RStudio
+-   `r fontawesome::fa("python", fill = "black")` → PyCharm, Jupyter, RStudio
+-   SQL → MySQL Workbench, Oracle SQL Developer, RStudio
 
 ## Workshop Overview
 
@@ -154,7 +154,7 @@ In this workshop series, we'll take on an example project and walk through the d
 
 4.  Reporting Results
 
-## Workshop Learning Objectives
+## `r fontawesome::fa("graduation-cap", fill = "black")` Workshop Learning Objectives
 
 If you give an honest effort to solve each problem in this class, I promise that you will be able to do the follow at the end of the workshop:
 
