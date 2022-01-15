@@ -1,13 +1,13 @@
 # Data Science Workshop
 
-This contains all the files for the public policy data science workshop at UCR in Fall 2020. In this workshop, you will learn how to use Stata and R to clean data, create effective visualizations, and models for inference.
+This contains all the files for the public policy data science workshop at UCR in Winter 2022. In this workshop, you will learn how to use Python and R to clean data, create effective visualizations, and build models for inference.
 
 In this workshop, we will learn the following:
 
-1. Load a data set in Stata and R and clean it for analysis
+1. Prepare a clean data for analysis
 
-2. Calculate descriptive statistics and visualize your data in Stata and R
+2. Identify patterns and visualize data
 
-3. Analyze data with basic modeling techniques in Stata and R
+3. Use statistical methods to test hypotheses
 
-4. Visualize the results of your model and generate predictions
+4. Report your results in a reproducible manor
