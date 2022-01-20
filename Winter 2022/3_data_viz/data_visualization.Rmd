@@ -1,0 +1,174 @@
+---
+title: "Data Visualization and Hypothesis Generation"
+output: html_notebook
+---
+
+The exploratory data analysis (EDA) process is important because it helps with us learn more about what the data measures, what typical values are, and also identify errors. But EDA is also very helpful for identifying patterns in the data, relationships between variables, and ultimately generate testable hypotheses.
+
+In the previous lesson, we learn the basics of summarizing, filtering, and arrange data but in this lesson we'll learn how to visualize data. Data visualization is an extremely good way to learn about your data. You tell me what give YOU more information. This:
+
+```{r include = FALSE}
+library(tidyverse)
+```
+
+```{r}
+head(table1)
+```
+
+or this?
+
+```{r echo = FALSE}
+ggplot(data = table1, 
+       aes(x = year, y = cases, group = country, color = country)) +
+  geom_line()
+```
+
+Exactly.
+
+Python and R both have good plotting libraries, and because we can use both languages in R Studio, we can visualize our data using both. Our focus in this lesson, however, will be on learning the extremely powerful visualization package in R called `ggplot2`. `ggplot2` is built around what's called the "grammar of graphics" which is a system of building data visuals in a way that is easy to describe and understand. Data visualization with `ggplot` is one of the best aspects of using R.
+
+In general in conducting EDA, we want to explore two questions. As Hadley Wickham explains in [Chapter 7 of R for Data Science](https://r4ds.had.co.nz/exploratory-data-analysis.html#questions):
+
+> ... two types of questions will always be useful for making discoveries within your data. You can loosely word these questions as:
+>
+> 1.  What type of variation occurs within my variables?
+> 2.  What type of covariation occurs between my variables?
+
+# `r fontawesome::fa("graduation-cap")` Session Learning Objectives
+
+1.  Learn how build plots in `ggplot2`
+2.  Learn how to display multiple dimensions of data in one plot
+3.  Learn how to show more data visuals with facets
+4.  Learn how to "touch-up" plots to make them more "exciting"
+5.  Practice using visuals to develop hypotheses
+
+# Up and Running with `ggplot2`
+
+`ggplot2` is one of the primary packages included in R's tidyverse, and we can load like so:
+
+```{r echo = TRUE}
+library(tidyverse)
+```
+
+Here you can see that `ggplot2` is listed among the packages loaded by the tidyverse.
+
+`ggplot2` builds plots with two basic functions: `ggplot()` and `geom_*()`, where `*` is a placeholder for a number of different `geom`s that are available.
+
+I like to learn by doing, so let's just start plotting, then I'll explain things. First, let's load in our clean data from last session:
+
+```{r include = FALSE}
+flight.data <- read_csv("/Users/nickjenkins/Documents/Workshops & Conferences/Data-Science-Workshop/Winter 2022/data/flights_cleaned.csv")
+```
+
+```{r eval = FALSE}
+flight.data <- read_csv("Documents/my_project/flights_cleaned.csv")
+```
+
+Alright, looks good. Now let's build a histogram of flight departure delays `dep_delay`:
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = dep_delay)) +
+  geom_histogram()
+```
+
+We built this plot with the following components:
+
+-   `ggplot()`: the main plotting function
+
+-   `data = flight.data`: set the `data` argument equal to the data that I want to plot
+
+-   `mapping = aes(x = dep_delay)`: we always map the values we want to plot to an aesthetic (`aes()`). In this case, we are mapping the x-axis aesthetic to `dep_delay`
+
+-   `geom_histogram`: this defines the type of plot to make
+
+It looks like most of the values are close to zero, but this plot already looks suspicious given the how wide the x-axis is. The long x-axis means that extreme values exist, but there aren't enough to make a bar tall enough we can see. Let's zoom in to get a better sense of what these values are. We can zoom by limiting the y-axis to a narrower width with `coord_cartesian()`:
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = dep_delay)) +
+  geom_histogram() +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+It looks like there are some extreme values and we can see that there are more that just a couple. Let's use our `arrange()` and `filter()` skills to see what these values are:
+
+```{r}
+flight.data %>% 
+  filter(dep_delay > 750) %>% 
+  arrange(desc(dep_delay))
+```
+
+There are `r nrow(filter(flight.data, dep_delay > 750))` flights that had delays of longer than 750 minutes and `r nrow(filter(flight.data, dep_delay > 1000))` with over 1000 minutes.
+
+A better way to get a sense of the range of values might be to use a boxplot. Let's also include airline information to see how the delays vary by airline:
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = carrier, y = dep_delay)) +
+  geom_boxplot()
+```
+
+No super helpful, but better. Let's check out arrival times.
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = arr_delay)) +
+  geom_histogram()
+```
+
+Looks like a similar story here.
+
+Instead of using histograms we could also plot the densities. Density plots standardize the count across categories so that the area under the curve equals 1.
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = arr_delay)) +
+  geom_density()
+```
+
+We've looked at departure delays and arrival delays independently, but is there a relationship between them? It seems reasonable that if a plane leaves late it will also arrive late, right? Let's use a scatter plot to look at this relationship. In the scatter plot, we'll put `dep_delay` on the x-axis and `arr_delay` on the y-axis because we typically think of the `x` variable as explaining the `y` variable:
+
+```{r}
+ggplot(data = flight.data, mapping = aes(x = dep_delay, y = arr_delay)) +
+  geom_point()
+```
+
+That's a pretty strong relationship.
+
+## Exercises
+
+1.  Visualize departure delays `dep_delay` using a frequency polygon `geom_freqpoly`. How does this differ from a density plot?
+2.  Plot the relationship between `month` and `dep_delay`. Which month has the most delays?
+
+# Visualizing Multiple Dimensions
+
+So far we've seen plots of one and two variables, but what if we wanted even more information? For example, what if we wanted to look at the relationship between departure delays and arrival delays by airline? We can do this by mapping the `carrier` to a color like this:
+
+```{r}
+ggplot(data = flight.data, 
+       mapping = aes(x = dep_delay, y = arr_delay, color = carrier)) +
+  geom_point()
+```
+
+Maybe it's not the airline that matters, but where the flight leaves from. To check this, we'll map `origin` to the color:
+
+```{r}
+ggplot(data = flight.data, 
+       mapping = aes(x = dep_delay, y = arr_delay, color = origin)) +
+  geom_point()
+```
+
+How much do carrier delays vary by where the originate from? We'll use a bar plot for this and because it's a bar, we'll map the fill to `origin` instead of the color:
+
+```{r}
+ggplot(data = flight.data, 
+       mapping = aes(x = carrier, y = dep_delay, fill = origin)) +
+  geom_col()
+```
+
+In addition to mapping variables to color and fill, you can also map them to shape, size, and alpha (which controls transparency).
+
+## Exercises
+
+1.  Plot the relationship between `dep_time` and `tot_delay`. What might explain the pattern you see? Does this pattern depend on the origin of the flight?
+
+    ```{r}
+    ggplot(flight.data, aes(x = dep_time)) +
+      geom_bar()
+    ```
