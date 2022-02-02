@@ -22,12 +22,10 @@ Markdown is arguably THE best tool for reporting results and we will be making u
     -   Handle missing values
     -   Rename variables
     -   Create variables
+    -   Pivot Data
+    -   Separate Data
 
-4.  Use descriptive methods to learn your data
-
-    -   Summarize and aggregate data
-    -   Filter data
-    -   Arrange data
+4.  Learn the "tidy data" phlisophy
 
 # (R)Markdown Refresher
 
@@ -651,98 +649,6 @@ table3 %>%
                      "5671-67210", "5891-63610")
     )
     ```
-
-# Exploring Data with Descriptive Methods
-
-Once we have our data in a tidy format, the next step is to start exploring it to learn more about what information our data has. One of the best ways to do this is with data visualizations, but there are important non-visual ways to explore it as well. In this section we'll explore how to:
-
--   Summarize and aggregate data
-
--   Filter data
-
--   Arrange data
-
-## Summarizing and Aggregating Data
-
-Summarizing and aggregation are useful because they allow us to answer questions like: "how long is the average flight?", "which carriers have the longest delays on average?" and "which origin has the most number of carriers?" These questions can easily be answered with the combination of the `group_by()` and `summarize()` functions in R.
-
-`group_by()` puts the data into groups so that we can then perform calculations for each group instead of the entire column of data. `summarize()` collapses our data down to the level of our groups so that we can answer questions at the group-level. For example, which carriers have the longest delays on average? *Note that we probably don't want an assignment here.*
-
-```{r}
-flights_no_na %>% 
-  # lets group the data by carrier
-  group_by(carrier) %>% 
-  # then find the mean delay for each carrier
-  summarize(mean_delay = mean(dep_delay))
-```
-
-Which origin has the most number of carriers? To answer this, we'll use the `n_distinct()` function which calculates the number of distinct values.
-
-```{r}
-flights_no_na %>% 
-  group_by(origin) %>% 
-  summarize(n_carriers = n_distinct(carrier))
-```
-
-It's also possible to group by multiple groups to narrower calculations.
-
-### Exercise
-
-1.  Find the average departure delay (`dep_delay`) for each `carrier` at each `origin`.
-
-## Filtering Data
-
-Your answer to the last exercise gives some good info, but it's natural to look at data like that and wonder what the longest average delay was. This is where `filter()` comes in. Let's filter the data from the last exercise to find the longest delay:
-
-```{r}
-flights_no_na %>% 
-  group_by(origin, carrier) %>% 
-  summarize(avg_delay = mean(dep_delay)) %>% 
-  # filter the data where avg_delay equals the maximum avg_delay
-  filter(avg_delay == max(avg_delay))
-```
-
-Notice that R returned the max delay by each airport. That's because our data is still grouped. We can get the overall maximum by ungrouping the data after we summarize it:
-
-```{r}
-flights_no_na %>% 
-  group_by(origin, carrier) %>% 
-  summarize(avg_delay = mean(dep_delay)) %>% 
-  # now ungroup the data
-  ungroup() %>% 
-  # filter the data where avg_delay equals the maximum avg_delay
-  filter(avg_delay == max(avg_delay))
-```
-
-We can figure out what airline OO is by looking at the `airlines` data included in the `nycflights13` R package:
-
-```{r}
-filter(nycflights13::airlines, carrier == "OO")
-```
-
-### Exercise
-
-1.  Use `filter()` to find the longest distance (`distance`) any flight traveled.
-
-## Arranging Data
-
-Instead of returning only one specific value, like the maximum, you might instead want to arrange the data. This is what `arrange()` is for. Let's calculate the average delays by origin and carrier and arrange the data so that we can see all the the delays in order:
-
-```{r}
-flights_no_na %>% 
-  group_by(origin, carrier) %>% 
-  summarize(avg_delay = mean(dep_delay)) %>% 
-  arrange(avg_delay)
-```
-
-By default, `arrange()` puts the values in acceding order but we can change that to descending order by wrapping our variable with `desc()` like so:
-
-```{r}
-flights_no_na %>% 
-  group_by(origin, carrier) %>% 
-  summarize(avg_delay = mean(dep_delay)) %>% 
-  arrange(desc(avg_delay))
-```
 
 ## Save Your Cleaned Data
 
